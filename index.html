@@ -219,63 +219,86 @@
         const popup = document.getElementById('popup');
         const popupMessage = document.getElementById('popup-message');
 
-        addOrderButton.addEventListener('click', function() {
-            const newOrder = document.createElement('div');
-            newOrder.className = 'order-item';
-            newOrder.innerHTML = `
-                <label for="food">Food:</label>
-                <div class="custom-select">
-                    <select name="food[]" required>
-                        <option value="Fried rice" data-img="fried.jpg">Fried rice</option>
-                        <option value="Jollof" data-img="jollof.jpg">Jollof</option>
-                        <option value="Noodles" data-img="nood.jpg">Noodles</option>
-                        <option value="Ampesie" data-img="ampe.jpg">Ampesie</option>
-                    </select>
-                    <div class="select-box">
-                        <img src="fried.jpg" alt="Selected Food" />
-                        <span>Fried rice</span>
-                    </div>
+        <script>
+    // Handle adding new orders
+    document.getElementById('add-order').addEventListener('click', function() {
+        const newOrder = document.createElement('div');
+        newOrder.className = 'order-item';
+        newOrder.innerHTML = `
+            <label for="food">Food:</label>
+            <div class="custom-select">
+                <select name="food[]" required>
+                    <option value="Fried rice" data-img="fried.jpg">Fried rice</option>
+                    <option value="Jollof" data-img="jollof.jpg">Jollof</option>
+                    <option value="Noodles" data-img="nood.jpg">Noodles</option>
+                    <option value="Ampesie" data-img="ampe.jpg">Ampesie</option>
+                </select>
+                <div class="select-box">
+                    <img src="fried.jpg" alt="Selected Food" />
+                    <span>Fried rice</span>
                 </div>
-                <label for="quantity">Quantity:</label>
-                <input type="number" name="quantity[]" required>
-            `;
-            ordersContainer.appendChild(newOrder);
-        });
+            </div>
+            <label for="quantity">Quantity:</label>
+            <input type="number" name="quantity[]" required>
+        `;
+        ordersContainer.appendChild(newOrder);
 
-        document.getElementById('food-select').addEventListener('change', function() {
+        // Update select boxes for new orders
+        updateSelectBox(newOrder.querySelector('.custom-select'));
+    });
+
+    // Update the image and label when a food option is changed
+    function updateSelectBox(selectBox) {
+        const selectElement = selectBox.querySelector('select');
+        const imgElement = selectBox.querySelector('img');
+        const labelElement = selectBox.querySelector('span');
+
+        selectElement.addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
             const imgSrc = selectedOption.getAttribute('data-img');
             const labelText = selectedOption.text;
 
-            document.getElementById('food-img').src = imgSrc;
-            document.getElementById('food-label').textContent = labelText;
+            imgElement.src = imgSrc;
+            labelElement.textContent = labelText;
         });
 
-        document.getElementById('order-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const name = document.getElementById('name').value;
-            fetch('https://formspree.io/f/xpwadnan', {
-                method: 'POST',
-                body: new FormData(this)
-            }).then(response => {
-                if (response.ok) {
-                    popupMessage.textContent = `Thank you, ${name}! Your order has been submitted. We will get back to you soon.`;
-                    popup.style.display = 'block';
-                    document.getElementById('order-form').reset();
-                } else {
-                    popupMessage.textContent = `Sorry, ${name}. There was a problem with your order submission. Please try again later.`;
-                    popup.style.display = 'block';
-                }
-            }).catch(error => {
-                console.error('Error:', error);
+        // Trigger change event to set initial values
+        selectElement.dispatchEvent(new Event('change'));
+    }
+
+    // Initialize select boxes for the initial order
+    updateSelectBox(document.querySelector('.order-item .custom-select'));
+
+    // Handle form submission
+    document.getElementById('order-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        fetch('https://formspree.io/f/xpwadnan', {
+            method: 'POST',
+            body: new FormData(this)
+        }).then(response => {
+            if (response.ok) {
+                popupMessage.textContent = `Thank you, ${name}! Your order has been submitted. We will get back to you soon.`;
+                popup.style.display = 'block';
+                document.getElementById('order-form').reset();
+                // Reset all select boxes
+                document.querySelectorAll('.custom-select').forEach(updateSelectBox);
+            } else {
                 popupMessage.textContent = `Sorry, ${name}. There was a problem with your order submission. Please try again later.`;
                 popup.style.display = 'block';
-            });
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            popupMessage.textContent = `Sorry, ${name}. There was a problem with your order submission. Please try again later.`;
+            popup.style.display = 'block';
         });
+    });
 
-        function closePopup() {
-            popup.style.display = 'none';
-        }
+    function closePopup() {
+        popup.style.display = 'none';
+    }
+</script>
+
     </script>
 </body>
 </html>
