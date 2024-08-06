@@ -28,9 +28,14 @@
             max-width: 600px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             position: relative;
+            text-align: center;
+        }
+        .form-wrapper img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
         }
         h1 {
-            text-align: center;
             margin-bottom: 20px;
         }
         .form-group {
@@ -101,13 +106,40 @@
         .help-button:hover {
             background: #2980b9;
         }
+        .custom-select {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .select-box {
+            display: flex;
+            align-items: center;
+            background: #555;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .select-box img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .select-box span {
+            flex-grow: 1;
+        }
+        .select-box:hover {
+            background: #666;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="form-wrapper">
+            <img src="logo.jpg" alt="Restaurant Logo"> <!-- Image above the title -->
             <h1>CONECTAR RESTAURANT</h1>
-              <p>Created by Kwabena Osei Nketiah. All rights reserved</p>
+            <p>Created by Kwabena Osei Nketiah. All rights reserved</p>
             <form id="order-form" action="https://formspree.io/f/your-form-id" method="POST">
                 <div class="form-group">
                     <label for="name">Name:</label>
@@ -124,11 +156,17 @@
                 <div class="order-section" id="orders">
                     <div class="order-item">
                         <label for="food">Food:</label>
-                        <select name="food[]" required>
-                            <option value="Fried rice" data-img="fried.jpg">Fried rice</option>
-                            <option value="Jollof" data-img="jollof.jpg">Jollof</option>
-                            <option value="Noodles" data-img="nood.jpg">Noodles</option>
-                        </select>
+                        <div class="custom-select">
+                            <select id="food-select" name="food[]" required>
+                                <option value="Fried rice" data-img="fried.jpg">Fried rice</option>
+                                <option value="Jollof" data-img="jollof.jpg">Jollof</option>
+                                <option value="Noodles" data-img="nood.jpg">Noodles</option>
+                            </select>
+                            <div class="select-box">
+                                <img id="food-img" src="fried.jpg" alt="Selected Food" />
+                                <span id="food-label">Fried rice</span>
+                            </div>
+                        </div>
                         <label for="quantity">Quantity:</label>
                         <input type="number" name="quantity[]" required>
                     </div>
@@ -154,22 +192,37 @@
             newOrder.className = 'order-item';
             newOrder.innerHTML = `
                 <label for="food">Food:</label>
-                <select name="food[]" required>
-                    <option value="Fried rice" data-img="fried.jpg">Fried rice</option>
-                    <option value="Jollof" data-img="jollof.jpg">Jollof</option>
-                    <option value="Noodles" data-img="nood.jpg">Noodles</option>
-                    <option value="Ampesie" data-img="ampe.jpg">Ampesie</option>
-                </select>
+                <div class="custom-select">
+                    <select name="food[]" required>
+                        <option value="Fried rice" data-img="fried.jpg">Fried rice</option>
+                        <option value="Jollof" data-img="jollof.jpg">Jollof</option>
+                        <option value="Noodles" data-img="nood.jpg">Noodles</option>
+                        <option value="Ampesie" data-img="ampe.jpg">Ampesie</option>
+                    </select>
+                    <div class="select-box">
+                        <img src="fried.jpg" alt="Selected Food" />
+                        <span>Fried rice</span>
+                    </div>
+                </div>
                 <label for="quantity">Quantity:</label>
                 <input type="number" name="quantity[]" required>
             `;
             ordersContainer.appendChild(newOrder);
         });
 
+        document.getElementById('food-select').addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const imgSrc = selectedOption.getAttribute('data-img');
+            const labelText = selectedOption.text;
+
+            document.getElementById('food-img').src = imgSrc;
+            document.getElementById('food-label').textContent = labelText;
+        });
+
         document.getElementById('order-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const name = document.getElementById('name').value;
-            fetch('formspreelink', {
+            fetch('https://formspree.io/f/your-form-id', {  // Replace with your Formspree URL
                 method: 'POST',
                 body: new FormData(this)
             }).then(response => {
@@ -177,9 +230,14 @@
                     popupMessage.textContent = `Thank you, ${name}! Your order has been submitted. We will get back to you soon.`;
                     popup.style.display = 'block';
                     document.getElementById('order-form').reset();
+                } else {
+                    popupMessage.textContent = `Sorry, ${name}. There was a problem with your order submission. Please try again later.`;
+                    popup.style.display = 'block';
                 }
             }).catch(error => {
                 console.error('Error:', error);
+                popupMessage.textContent = `Sorry, ${name}. There was a problem with your order submission. Please try again later.`;
+                popup.style.display = 'block';
             });
         });
 
