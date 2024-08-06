@@ -267,22 +267,23 @@
     
     updateSelectBox(document.querySelector('.order-item .custom-select'));
 
-    
-       document.getElementById('order-form').addEventListener('submit', function(event) {
+
+document.getElementById('order-form').addEventListener('submit', function(event) {
   event.preventDefault();
+  const form = this;
   const name = document.getElementById('name').value;
   const popup = document.getElementById('popup');
   const popupMessage = document.getElementById('popup-message');
 
   fetch('https://formspree.io/f/xzzpgpjp', {
     method: 'POST',
-    body: new FormData(this)
+    body: new FormData(form)
   })
   .then(response => {
     if (response.ok) {
       popupMessage.textContent = `Thank you, ${name}! Your order has been submitted. We will get back to you soon.`;
       popup.style.display = 'block';
-      document.getElementById('order-form').reset();
+      form.reset();
       document.querySelectorAll('.custom-select').forEach(updateSelectBox);
     } else {
       popupMessage.textContent = `Sorry, ${name}. There was a problem with your order submission. Please try again later.`;
@@ -295,11 +296,6 @@
     popup.style.display = 'block';
   });
 });
-
-function closePopup() {
-    const popup = document.getElementById('popup');
-    popup.style.display = 'none';
-}
-    </script>
+ </script>
 </body>
 </html>
