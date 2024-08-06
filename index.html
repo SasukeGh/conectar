@@ -275,9 +275,12 @@ document.getElementById('order-form').addEventListener('submit', function(event)
   const popup = document.getElementById('popup');
   const popupMessage = document.getElementById('popup-message');
 
-  fetch('https://formspree.io/f/xzzpgpjp', {
+  const formData = new FormData(form);
+  console.log(formData); // Log the form data to the console
+
+  fetch('YOUR_FORMSPREE_URL', {
     method: 'POST',
-    body: new FormData(form)
+    body: formData
   })
   .then(response => {
     if (response.ok) {
@@ -296,6 +299,7 @@ document.getElementById('order-form').addEventListener('submit', function(event)
     popup.style.display = 'block';
   });
 });
+
  </script>
 </body>
 </html>
