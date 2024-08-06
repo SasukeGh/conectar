@@ -281,7 +281,7 @@ document.getElementById('order-form').addEventListener('submit', function(event)
   fetch('https://formspree.io/f/xzzpgpjp', {
     method: 'POST',
     body: formData,
-    mode: no-cors
+    mode: 'no-cors'
   })
   .then(response => {
     if (response.ok) {
