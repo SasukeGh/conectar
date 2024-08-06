@@ -20,10 +20,12 @@
         }
         .container {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
         }
         .form-wrapper {
             background: #333;
@@ -34,6 +36,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             position: relative;
             text-align: center;
+            margin: auto;
         }
         .form-wrapper img {
             max-width: 100%;
@@ -96,16 +99,18 @@
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
-        }.dev-button {
+        }
+        .dev-button {
             position: absolute;
             bottom: 10px;
-            right: 10px;
+            right: 130px; /* Adjusted position to avoid overlap */
             background: #3498db;
             color: #fff;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
+            z-index: 100;
         }
         .dev-button:hover {
             background: #2980b9;
@@ -120,6 +125,7 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
+            z-index: 10; 
         }
         .help-button:hover {
             background: #2980b9;
