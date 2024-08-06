@@ -170,7 +170,7 @@
             <h1>CONECTAR RESTAURANT</h1>
             <p>Created by:Kwabena Osei Nketiah.JHS3 </p>
             <p>Location:Kwadaso,Kumasi.</p>
-            <form action="https://formspree.io/f/xzzpgpjp" method="post" enctype="multipart/form-data id="orderForm">
+            <form action="https://formspree.io/f/xzzpgpjp" method="post" enctype="multipart/form-data" id="order-form">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" required>
@@ -279,7 +279,7 @@ document.getElementById('order-form').addEventListener('submit', function(event)
   console.log(formData)
 
   fetch(form.action, {
-     method: form.method
+     method: form.method,
      body: new FormData(form)
      headers: {
           'Accept': 'application/json'
