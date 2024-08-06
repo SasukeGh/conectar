@@ -276,9 +276,9 @@ document.getElementById('order-form').addEventListener('submit', function(event)
   const popupMessage = document.getElementById('popup-message');
 
   const formData = new FormData(form);
-  console.log(formData); // Log the form data to the console
+  console.log(formData)
 
-  fetch('YOUR_FORMSPREE_URL', {
+  fetch('https://formspree.io/f/xzzpgpjp', {
     method: 'POST',
     body: formData
   })
