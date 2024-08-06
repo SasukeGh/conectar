@@ -218,10 +218,8 @@
         const ordersContainer = document.getElementById('orders');
         const popup = document.getElementById('popup');
         const popupMessage = document.getElementById('popup-message');
-
-        <script>
-    // Handle adding new orders
-    document.getElementById('add-order').addEventListener('click', function() {
+   
+            document.getElementById('add-order').addEventListener('click', function() {
         const newOrder = document.createElement('div');
         newOrder.className = 'order-item';
         newOrder.innerHTML = `
@@ -243,11 +241,11 @@
         `;
         ordersContainer.appendChild(newOrder);
 
-        // Update select boxes for new orders
+        
         updateSelectBox(newOrder.querySelector('.custom-select'));
     });
 
-    // Update the image and label when a food option is changed
+    
     function updateSelectBox(selectBox) {
         const selectElement = selectBox.querySelector('select');
         const imgElement = selectBox.querySelector('img');
@@ -262,14 +260,14 @@
             labelElement.textContent = labelText;
         });
 
-        // Trigger change event to set initial values
+        
         selectElement.dispatchEvent(new Event('change'));
     }
 
-    // Initialize select boxes for the initial order
+    
     updateSelectBox(document.querySelector('.order-item .custom-select'));
 
-    // Handle form submission
+    
     document.getElementById('order-form').addEventListener('submit', function(event) {
         event.preventDefault();
         const name = document.getElementById('name').value;
@@ -281,7 +279,7 @@
                 popupMessage.textContent = `Thank you, ${name}! Your order has been submitted. We will get back to you soon.`;
                 popup.style.display = 'block';
                 document.getElementById('order-form').reset();
-                // Reset all select boxes
+                
                 document.querySelectorAll('.custom-select').forEach(updateSelectBox);
             } else {
                 popupMessage.textContent = `Sorry, ${name}. There was a problem with your order submission. Please try again later.`;
