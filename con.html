@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conectar Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('back.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .form-wrapper {
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .form-group select {
+            background: #555;
+            color: #fff;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #e74c3c;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background: #c0392b;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #2ecc71;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        .popup button {
+            background: #fff;
+            color: #333;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .help-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .help-button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <h1>CONECTAR RESTAURANT</h1>
+              <p>Created by Kwabena Osei Nketiah. All rights reserved</p>
+            <form id="order-form" action="https://formspree.io/f/your-form-id" method="POST">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" required>
+                </div>
+                <div class="form-group">
+                    <label for="number">Phone Number:</label>
+                    <input type="tel" id="number" name="number" required>
+                </div>
+                <div class="order-section" id="orders">
+                    <div class="order-item">
+                        <label for="food">Food:</label>
+                        <select name="food[]" required>
+                            <option value="Fried rice" data-img="fried.jpg">Fried rice</option>
+                            <option value="Jollof" data-img="jollof.jpg">Jollof</option>
+                            <option value="Noodles" data-img="nood.jpg">Noodles</option>
+                        </select>
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" name="quantity[]" required>
+                    </div>
+                </div>
+                <button type="button" id="add-order">Add Another Order</button>
+                <button type="submit">Submit Orders</button>
+            </form>
+            <div class="popup" id="popup">
+                <p id="popup-message"></p>
+                <button onclick="closePopup()">Close</button>
+            </div>
+            <a href="https://wa.me/233257789272/?text=Help" target="_blank" class="help-button">Help</a>
+        </div>
+    </div>
+    <script>
+        const addOrderButton = document.getElementById('add-order');
+        const ordersContainer = document.getElementById('orders');
+        const popup = document.getElementById('popup');
+        const popupMessage = document.getElementById('popup-message');
+
+        addOrderButton.addEventListener('click', function() {
+            const newOrder = document.createElement('div');
+            newOrder.className = 'order-item';
+            newOrder.innerHTML = `
+                <label for="food">Food:</label>
+                <select name="food[]" required>
+                    <option value="Fried rice" data-img="fried.jpg">Fried rice</option>
+                    <option value="Jollof" data-img="jollof.jpg">Jollof</option>
+                    <option value="Noodles" data-img="nood.jpg">Noodles</option>
+                    <option value="Ampesie" data-img="ampe.jpg">Ampesie</option>
+                </select>
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="quantity[]" required>
+            `;
+            ordersContainer.appendChild(newOrder);
+        });
+
+        document.getElementById('order-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            fetch('formspreelink', {
+                method: 'POST',
+                body: new FormData(this)
+            }).then(response => {
+                if (response.ok) {
+                    popupMessage.textContent = `Thank you, ${name}! Your order has been submitted. We will get back to you soon.`;
+                    popup.style.display = 'block';
+                    document.getElementById('order-form').reset();
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        function closePopup() {
+            popup.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
